@@ -1,0 +1,10 @@
+{
+    "event": "getColor",
+    "url": "https://particle-example-29829.firebaseio.com/color.json",
+    "requestType": "GET",
+    "query": {
+    	"auth":"qjDhMye4hDtgY3z4b0lTLq35buOFuPkZPKlss35J"
+    },
+    "mydevices": true,
+    "noDefaults": true
+}

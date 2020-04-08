@@ -1,0 +1,16 @@
+{
+	"event": "postPosition",
+	"url": "https://particle-example-29829.firebaseio.com/position.json",
+	"requestType": "PUT",
+	"query": {
+		"auth":"JqYOBWnvqW3GXZ2wKKgcXXONSpHvK3LyoR6vS89r"
+	},
+	"json": {
+		"lat": "{{lat}}",
+		"lng": "{{lng}}",
+		"acc": "{{acc}}",
+		"ts": "{{PARTICLE_PUBLISHED_AT}}"
+	},
+	"mydevices": true,
+	"noDefaults": true
+}

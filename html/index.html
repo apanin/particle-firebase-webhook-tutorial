@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
+
+    <!-- CSS stylesheet(s) -->
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+
+    <!-- Libraries -->
+    <script defer src="https://www.gstatic.com/firebasejs/7.13.1/firebase.js"></script>
+    <!-- My script(s) -->
+    <script src="js/script.js"></script>
+
+  </head>
+
+  <body>
+        <h1> Firebase trial page </h1>
+        <h2> Send a color </h2>
+        <input id="color-picker" type="color" id="skin-color" value="#ff0000">
+        <button onclick="sendColor()"> send color </button>
+        <h2 id="particle-location-title"> Where is the particle? </h2>
+        <div id="particle-location"></div>
+        <button onclick="getPosition()"> get Location </button>
+  </body>
+
+</html>
