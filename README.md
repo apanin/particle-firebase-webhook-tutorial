@@ -218,4 +218,6 @@ void getDataHandler(const char *topic, const char *data) {
 Note that the event name is the name of your webhook.
 Particle.subscribe() sets up which functions will be called when the event is publeshed, where it goes and with which devices it can be done.
 
-Note that in this case the data we are sending from the html page is an int, but normally the data is in string format, in which case we would have had to use r = atoi(root["r"]).
+Note that in this case the data we are sending from the html page is an int, but normally the data is in string format, in which case we would have had to define the colors as the following ```r = atoi(root["r"])```.
+
+Note Notice taht I need to substract the color channels from 255 to get the desired color, this is due to the way the led module works, if I were using neopixels, I write the values directly as they are.
