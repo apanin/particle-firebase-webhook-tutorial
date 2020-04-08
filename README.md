@@ -9,7 +9,7 @@ https://firebase.google.com/docs/database/web/start
 
 ## Adding firebase to a html document
 
-''' <script defer src="https://www.gstatic.com/firebasejs/7.13.1/firebase-app.js"></script> '''
+``` <script defer src="https://www.gstatic.com/firebasejs/7.13.1/firebase-app.js"></script> ```
 
 you will need to add this script in your html document.
 
