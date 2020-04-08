@@ -2,7 +2,9 @@
 Brief tutorial for on how to combine websites to particles through webhooks and firebase
 The tutorial is made to be followed step by step, but I included all the final documents to the repository.
 
-using source tutorial https://github.com/rickkas7/firebase_tutorial
+this tutorial is mainly based on the following tutorials:
+https://github.com/rickkas7/firebase_tutorial
+https://www.tutorialspoint.com/firebase/index.htm
 
 For the sake of this workshop I will consider that a database is already set up.
 You can learn how to do so here:
