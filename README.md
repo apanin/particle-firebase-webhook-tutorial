@@ -61,7 +61,8 @@ function loadFirebase() {
 }
 ``` 
 If the firebase has been configured correctly, your console should print the following:
-<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.17.16%20PM.png" width="50%" height="50%">
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.17.16%20PM.png" width="20%" height="20%">
+
 In the case where something is done wrong in the setup, you will get an error.
 
 ## sending data from the page
