@@ -12,6 +12,9 @@ add this script in your html document.
 ``` <script defer src="https://www.gstatic.com/firebasejs/7.13.1/firebase-app.js"></script> ```
 
 ## Configuring firebase in a js file
+your javascript file should contain the configuration of the database.
+To avoid the javascript function loading before the firebase-app script has been loaded, we add a window.onload condition.
+
 ``` javascript
 if(window.attachEvent) {
     window.attachEvent('onload', loadFirebase);
