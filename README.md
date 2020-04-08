@@ -1,18 +1,17 @@
-# particle-firebase-webhook-tutorial
+# Connecting particle to websites through firebase and webhooks
 Brief tutorial for firebase with webhooks
 
 using source tutorial https://github.com/rickkas7/firebase_tutorial
 
-## 0 :: Setting up firebase
-1. [Create firebase project](https://console.firebase.google.com/) (if you already have a google account)
-2. Create new database
-3. Select rules for read and write to true
-```
-{
-  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
-  "rules": {
-    ".read": true,
-    ".write": true
-  }
-}
-```
+For the sake of this workshop I will consider that a database is already set up.
+You can learn how to do so here:
+https://firebase.google.com/docs/database/web/start
+
+## Adding firebase to a html document
+
+''' <script defer src="https://www.gstatic.com/firebasejs/7.13.1/firebase-app.js"></script> '''
+
+you will need to add this script in your html document.
+
+
+
