@@ -61,14 +61,15 @@ function loadFirebase() {
 }
 ``` 
 If the firebase has been configured correctly, your console should print the following:
-<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.17.16%20PM.png" width="35%" height="35%">. In the case where something is done wrong in the setup, you will get an error.
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.17.16%20PM.png" width="35%" height="35%"> <br/>
+In the case where something is done wrong in the setup, you will get an error.
 
-## sending data from the page
+### sending data from the page
 to send data I added a button inside the body tag of the html page
 ```  
 <button onclick="sendColor()"> send color </button>
 ``` 
-as you can see the button triggers the sendColor() function when it is clicked. We can define the sendColor function in the javaScript, to give you an idea of the value format I instructed the function to send fixed values to each element (r, g , b). Note that the put instruction will delete any current entry in the database and replace it with what is being sent. Firebase also has an update function which will only replace elements that are sent and keep the rest as is. This can be done by replacing the word set by update.
+The button triggers the sendColor() function when it is clicked. We can define the sendColor function in the javaScript file, to give an idea of the value format I instructed the function to send fixed values to each element (r, g , b). Note that the put instruction will delete any current entry in the database and replace it with what is being sent. Firebase also has an update function which will only replace elements that are sent and keep the rest as is. This can be done by replacing the word set by update.
 
 ```
 function sendColor(){
@@ -86,14 +87,20 @@ function sendColor(){
 }
 
 ``` 
-## adding a color wheel
+
+If you go to your firebase after pressing the button it should look like this:
+
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.30.28%20PM.png" width="35%" height="35%"> <br/>
+
+
+### adding a color wheel
 to make the function more interesting I decided to integrate a colorwheel which I added over the button
 ```
 <input id="color-picker" type="color" id="skin-color" value="#ff0000">
 ```
 
 To make the send function more interesting I replaced the sendColor() function by the following
-using a hex to rgb conversion function found [here](https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb) Note that I changed the data format to a single variable and took out the curly brackets because the hexToRgb() function already formats the data appropriately. You can confirm this by looking at the the printed variable in your javascript console.
+
 ``` javascript
 function sendColor(){
   var color = document.getElementById("color-picker").value;
@@ -124,12 +131,16 @@ function hexToRgb(hex) {
     b: parseInt(result[3], 16)
   } : null;
 }
-``` 
+```
+I used the hex to rgb conversion function found [here](https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb). Note that I changed the data format to a single variable and took out the curly brackets because the hexToRgb() function already formats the data appropriately. You can confirm this by looking at the the printed variable in your javascript console.
 
-## creating a webhook for your particle
-The first thing you need to do to set up your particle is create a webhook.
-Write the following json file (for example this is getColor.json)
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.33.55%20PM.png" width="35%" height="35%"> <br/>
 
+## Setting the particle
+
+### making a get webhook
+The first thing you need to do to set up your particle is create a webhook. Write the following json file and save it.
+This is a get request because we are retrieving data from the database and sending it to the particle.
 ```
 {
     "event": "getColor",
@@ -142,18 +153,29 @@ Write the following json file (for example this is getColor.json)
     "noDefaults": true
 }
 ```
+The url of the database can be found here
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%204.02.33%20PM.png" width="35%" height="35%"> <br/>
 
-## publishing the webhook
-Webhooks can be made manually through particle's web ide, but it's nice to write them by hand, especially when you are working with more complex data sets/post requests rather than get.
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.58.27%20PM.png" width="35%" height="35%"> <br/>
+
+### publishing the webhook
+Webhooks can be made manually through particle's web ide, but you can also make them through your terminal, which is handy when you are working with more complex data sets/post requests rather than get.
 You can publish the webhook by running the following command line in your terminal(mac), make sure to be in the repository of the json file on your terminal.
+
 ```particle webhook create getColor.json```
 
-## wiring the particle
+Your terminal should respond with something of the sort
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%2012.05.14%20AM.png" width="35%" height="35%"> <br/>
+
+
+### wiring the particle
 in this particular example I am using two items from the keyes studio sensor kit, first the [digital push button] (https://wiki.keyestudio.com/Ks0029_keyestudio_Digital_Push_Button) and the [RGB led module](https://wiki.keyestudio.com/Ks0032_keyestudio_RGB_LED_Module)
 
 here are example codes for each [link](https://github.com/apanin/ParticleKeyeStudio37sensorKitExamples/blob/master/s11_Push_Button.ino)[link](https://github.com/apanin/ParticleKeyeStudio37sensorKitExamples/blob/master/s4_RGB_LED_module.ino)
 
 follow the schematic for hookup
+
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/hookup.png" width="35%" height="35%"> <br/>
 
 ## coding the particle
 Now that we have the webhook and the particle set up, we can use code.
@@ -226,24 +248,24 @@ void getDataHandler(const char *topic, const char *data) {
 }
 ```
 
-Note that the event name is the name of your webhook.
-Particle.subscribe() sets up which functions will be called when the event is publeshed, where it goes and with which devices it can be done.
+Note: the event name is the name of your webhook.
+Particle.subscribe() sets up which functions will be called when the event is published, where it goes and with which devices it can be done.
 
-Note that in this case the data we are sending from the html page is an int, but normally the data is in string format, in which case we would have had to define the colors as the following ```r = atoi(root["r"])```.
+Note: In this case the data we are sending from the html page is an int, but normally the data is in string format, in which case we would have had to define the colors as the following ```r = atoi(root["r"])```.
 
-Note Notice taht I need to substract the color channels from 255 to get the desired color, this is due to the way the led module works, if I were using neopixels, I write the values directly as they are gotten from the webhook.
+Note: I need to substract the color channels from 255 to get the desired color, this is due to the way the led module works, if I were using neopixels, I write the values directly as they are given from the webhook.
 
 ## posting data from the particle
-In this tutorial I will be using google maps api, but you can send any type of data to the database as long as it is in a valid format.
+In this case, I am using google maps api, but you can send any type of data to the database as long as it is in a valid format.
 
-## adding google maps api
+### adding google maps api
 Add the google maps integration to your particle account if it is not already done.
 Add the google maps library to your project. You can then add a google maps locator to the particle app.
 ```GoogleMapsDeviceLocator locator;```
 
 ## creating a put webhook
 Similarly to the get webhook, we will create a put type webhook.
-You can create the following json file
+You can create the following postPosition.json file
 ```
 {
 	"event": "postPosition",
@@ -264,11 +286,15 @@ You can create the following json file
 ```
 After which like the first time you will create a webhook through the terminal with the following command
 ```particle webhook create postPosition.json```
+
 You can test the webhook through the following command on the terminal (I used random sample data)
 ```particle publish postPosition "{\"lat\":100,\"lng\":12.32,\"acc\":0.05}"```
+It should look like this
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%201.38.20%20AM.png" width="35%" height="35%"> <br/>
+
 In this case I used a put request rather than a post because I am logging the particles current location and do not wish to keep previous data, if I wanted to keep track of the entries I would use a POST request instead.
 
-## Adding the put request to your particle code
+### Adding the put request to your particle code
 Now that the webhook is setup we will make the particle publish the data to the firebase.
 google maps function locationCallback() lets you use the location data (lat, lng), which we will use to post the data to the server.
 ```
@@ -366,11 +392,11 @@ void deviceNameHandler(const char *topic, const char *data) {
 	deviceName = data;
 } 
 ```
-# Retrieving data from the web
+## Retrieving data from the web
 Now that we have the particle posting data to the server, we will retrieve this data from the browser.
 Also note that an extra variable is given, which is the time stamp, this says when the data was posted from the particle.
 
-## Updating html
+### Updating html
 I updated the body of the html page started earlier by the following:
 ```
   <body>
@@ -384,7 +410,7 @@ I updated the body of the html page started earlier by the following:
   </body>
 ```
 
-## getting data
+### getting data
 the added button triggers the function getLocation, we will use this to get data and update the pages content consequently.
 ```
 function getLocation(){
@@ -488,4 +514,4 @@ function hexToRgb(hex) {
 
 ```
 
-And there you have it, a website and a particle connected through firebase.
+And there you have it, a website and a particle connected through firebase. ( Watch the video to see what it looks like)
