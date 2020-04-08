@@ -227,4 +227,135 @@ In this tutorial I will be using google maps api, but you can send any type of d
 
 ## adding google maps api
 Add the google maps integration to your particle account if it is not already done.
-Add the google maps library to your project.
+Add the google maps library to your project. You can then add a google maps locator to the particle app.
+```GoogleMapsDeviceLocator locator;```
+
+## creating a put webhook
+Similarly to the get webhook, we will create a put type webhook.
+You can create the following json file
+```
+{
+	"event": "postPosition",
+	"url": "https://particle-example-29829.firebaseio.com/position.json",
+	"requestType": "PUT",
+	"query": {
+		"auth":"JqYOBWnvqW3GXZ2wKKgcXXONSpHvK3LyoR6vS89r"
+	},
+	"json": {
+		"lat": "{{lat}}",
+		"lng": "{{lng}}",
+		"acc": "{{acc}}",
+		"ts": "{{PARTICLE_PUBLISHED_AT}}"
+	},
+	"mydevices": true,
+	"noDefaults": true
+}
+```
+After which like the first time you will create a webhook through the terminal with the following command
+```particle webhook create postPosition.json```
+You can test the webhook through the following command on the terminal (I used random sample data)
+```particle publish postPosition "{\"lat\":100,\"lng\":12.32,\"acc\":0.05}"```
+In this case I used a put request rather than a post because I am logging the particles current location and do not wish to keep previous data, if I wanted to keep track of the entries I would use a POST request instead.
+
+## Adding the put request to your particle code
+Now that the webhook is setup we will make the particle publish the data to the firebase.
+google maps function locationCallback() lets you use the location data (lat, lng), which we will use to post the data to the server.
+```
+// This #include statement was automatically added by the Particle IDE.
+#include <google-maps-device-locator.h>
+
+#include <SparkJson.h>
+
+#include "Particle.h"
+
+// Test Program #3 for Firebase Integration
+// Reads data from the database and prints it to the debug serial port
+
+
+// Forward declarations
+void getDataHandler(const char *topic, const char *data);
+const char *GET = "getColor";
+const char *POST = "postPosition";
+String deviceName;
+
+GoogleMapsDeviceLocator locator;
+
+#define rPin D1
+#define gPin D2
+#define bPin D0
+#define buttonPin D3
+int r = 0;
+int g = 0;
+int b = 0;
+
+void setup() {
+	Serial.begin(9600);
+	pinMode(rPin, OUTPUT);
+	pinMode(gPin, OUTPUT);
+	pinMode(bPin, OUTPUT);
+	//get location every 2000 seconds
+	locator.withLocateOnce().withSubscribe(locationCallback);
+}
+
+void loop() {
+    locator.loop();
+    if (digitalRead(buttonPin) == LOW){
+        Serial.println("button pushed");
+        analogWrite(gPin, 255);
+        analogWrite(rPin, 255);
+        analogWrite(bPin, 255);
+        Particle.subscribe("hook-response/getColor", getDataHandler, MY_DEVICES);
+		Particle.publish(GET, "", PRIVATE);
+		delay(1000);
+		locator.publishLocation();
+		delay(1000);
+	}
+	
+      analogWrite(rPin, 255-r);
+      analogWrite(gPin, 255-g);
+      analogWrite(bPin, 255-b);
+      delay(1000);
+}
+
+void getDataHandler(const char *topic, const char *data) {
+	// This isn't particularly efficient; there are too many copies of the data floating
+	// around here, but the data is not very large and it's not kept around long so it
+	// should be fine.
+	Serial.println("handle");
+	StaticJsonBuffer<256> jsonBuffer;
+	char *mutableCopy = strdup(data);
+	JsonObject& root = jsonBuffer.parseObject(mutableCopy);
+	free(mutableCopy);
+
+	Serial.printlnf("data: %s", data);
+	r = root["r"];
+	g = root["g"];
+	b = root["b"];
+	Serial.println(r);
+	Serial.println(g);
+	Serial.println(b);
+}
+
+void locationCallback(float lat, float lon, float accuracy) {
+    Serial.println("posting users postion");
+    Serial.print('lat: ');
+    Serial.println(lat);
+    Serial.print('lng: ');
+    Serial.println(lon);
+    Particle.subscribe("spark/", deviceNameHandler);
+    Particle.publish("spark/device/name");
+    Serial.println("updating location");
+	char buf[256];
+	snprintf(buf, sizeof(buf), "{\"lat\":%.6f,\"lng\":%.6f,\"acc\":\"%.6f\"}", lat, lon, accuracy);
+	Serial.printlnf("publishing %s", buf);
+	Particle.publish(POST, buf, PRIVATE);
+}
+
+void deviceNameHandler(const char *topic, const char *data) {
+	deviceName = data;
+} 
+```
+## Retrieving data from the web
+Now that we have the particle posting data to the server, we will retrieve this data from the browser.
+Also note that an extra variable is given, which is the time stamp, this says when the data was posted from the particle.
+
