@@ -52,7 +52,7 @@ function loadFirebase() {
   console.log(firebase);
 }
 ``` 
-# sending data from the page
+## sending data from the page
 to send data I added a button inside the body tag of the html page
 ```  
 <button onclick="sendColor()"> send color </button>
@@ -75,7 +75,7 @@ function sendColor(){
 }
 
 ``` 
-# adding a color wheel
+## adding a color wheel
 to make the function more interesting I decided to integrate a colorwheel which I added over the button
 ```
 <input id="color-picker" type="color" id="skin-color" value="#ff0000">
@@ -115,7 +115,7 @@ function hexToRgb(hex) {
 }
 ``` 
 
-# creating a webhook for your particle
+## creating a webhook for your particle
 The first thing you need to do to set up your particle is create a webhook.
 Write the following json file (for example this is getColor.json)
 
@@ -132,19 +132,19 @@ Write the following json file (for example this is getColor.json)
 }
 ```
 
-# publishing the webhook
+## publishing the webhook
 Webhooks can be made manually through particle's web ide, but it's nice to write them by hand, especially when you are working with more complex data sets/post requests rather than get.
 You can publish the webhook by running the following command line in your terminal(mac), make sure to be in the repository of the json file on your terminal.
 ```particle webhook create getColor.json```
 
-# wiring the particle
+## wiring the particle
 in this particular example I am using two items from the keyes studio sensor kit, first the [digital push button] (https://wiki.keyestudio.com/Ks0029_keyestudio_Digital_Push_Button) and the [RGB led module](https://wiki.keyestudio.com/Ks0032_keyestudio_RGB_LED_Module)
 
 here are example codes for each [link](https://github.com/apanin/ParticleKeyeStudio37sensorKitExamples/blob/master/s11_Push_Button.ino)[link](https://github.com/apanin/ParticleKeyeStudio37sensorKitExamples/blob/master/s4_RGB_LED_module.ino)
 
 follow the schematic for hookup
 
-# coding the particle
+## coding the particle
 Now that we have the webhook and the particle set up, we can use code.
 For this tutorial I will be using the [web ide](https://build.particle.io/)
 Create a new app and include the SparkJson library in the folder
@@ -221,3 +221,10 @@ Particle.subscribe() sets up which functions will be called when the event is pu
 Note that in this case the data we are sending from the html page is an int, but normally the data is in string format, in which case we would have had to define the colors as the following ```r = atoi(root["r"])```.
 
 Note Notice taht I need to substract the color channels from 255 to get the desired color, this is due to the way the led module works, if I were using neopixels, I write the values directly as they are gotten from the webhook.
+
+## posting data from the particle
+In this tutorial I will be using google maps api, but you can send any type of data to the database as long as it is in a valid format.
+
+## adding google maps api
+Add the google maps integration to your particle account if it is not already done.
+Add the google maps library to your project.
