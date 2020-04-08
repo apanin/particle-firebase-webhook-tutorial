@@ -1,25 +1,30 @@
 # Connecting particle to websites through firebase and webhooks
-Brief tutorial for on how to combine websites to particles through webhooks and firebase
-The tutorial is made to be followed step by step, but I included all the final documents to the repository.
+Brief tutorial for on how to combine websites to particles through webhooks and firebase.
+The tutorial is made to be followed step by step, but all the resulting documents are in the repository.
 
 this tutorial is mainly based on the following tutorials:
-https://github.com/rickkas7/firebase_tutorial
-https://www.tutorialspoint.com/firebase/index.htm
+⋅⋅* https://github.com/rickkas7/firebase_tutorial
+⋅⋅* https://www.tutorialspoint.com/firebase/index.htm
 
 For the sake of this workshop I will consider that a database is already set up.
-You can learn how to do so here:
-https://firebase.google.com/docs/database/web/start
-## Start with a basic html page
-use the template as given in the repository (or make your own).
-## Adding firebase to a html document
-add this script in the head of your html document.
-``` <script defer src="https://www.gstatic.com/firebasejs/7.13.1/firebase.js"></script> ```
+To set up a firebase database follow this tutorial:
+⋅⋅* https://firebase.google.com/docs/database/web/start
 
-## Configuring firebase in a js file
-your javascript file should contain the configuration of the database.
+## Setting up a webpage
+
+### Start with a basic html page
+use the template-project.zip in the repository (or make your own).
+
+### Adding firebase to a html document
+add this script in the head of your html document.
+```
+<script defer src="https://www.gstatic.com/firebasejs/7.13.1/firebase.js"></script> 
+```
+
+### Configuring firebase in a js file
+Your javascript file should contain the configuration of the firebase database.
+
 To avoid the javascript function loading before the firebase-app script has been loaded, we add a window.onload condition.
-Everything is working fine if your firebase object is being printed.
-In the case where something is done wrong in the setup, you will get an error.
 
 ``` javascript
 if(window.attachEvent) {
@@ -55,6 +60,10 @@ function loadFirebase() {
   console.log(firebase);
 }
 ``` 
+If the firebase has been configured correctly, your console should print the following:
+![alt text](https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.17.16%20PM.png)
+In the case where something is done wrong in the setup, you will get an error.
+
 ## sending data from the page
 to send data I added a button inside the body tag of the html page
 ```  
