@@ -17,7 +17,7 @@ use the template-project.zip in the repository (or make your own).
 
 ### Adding firebase to a html document
 add this script in the head of your html document.
-```
+```html
 <script defer src="https://www.gstatic.com/firebasejs/7.13.1/firebase.js"></script> 
 ```
 
@@ -66,12 +66,12 @@ In the case where something is done wrong in the setup, you will get an error.
 
 ### sending data from the page
 to send data I added a button inside the body tag of the html page
-```  
+``` javascript
 <button onclick="sendColor()"> send color </button>
 ``` 
 The button triggers the sendColor() function when it is clicked. We can define the sendColor function in the javaScript file, to give an idea of the value format I instructed the function to send fixed values to each element (r, g , b). Note that the put instruction will delete any current entry in the database and replace it with what is being sent. Firebase also has an update function which will only replace elements that are sent and keep the rest as is. This can be done by replacing the word set by update.
 
-```
+``` javascript
 function sendColor(){
   firebase.database().ref('color/').set({
   r: 10,
@@ -141,7 +141,7 @@ I used the hex to rgb conversion function found [here](https://stackoverflow.com
 ### making a get webhook
 The first thing you need to do to set up your particle is create a webhook. Write the following json file and save it.
 This is a get request because we are retrieving data from the database and sending it to the particle.
-```
+```json
 {
     "event": "getColor",
     "url": "https://particle-example-29829.firebaseio.com/color.json",
@@ -182,7 +182,7 @@ For this tutorial I will be using the [web ide](https://build.particle.io/)
 Create a new app and include the SparkJson library in the folder
 paste the following code
 
-```
+``` c
 #include <SparkJson.h>
 
 #include "Particle.h"
@@ -466,7 +466,7 @@ function getLocation(){
 ```
 When written as such, you can see that firebase is sending you a json file. Now since we are targetting location values we can do such like this:
 
-```
+```javascript
 /*****************
 Firebase/Particle example
 Nina Parenteau
