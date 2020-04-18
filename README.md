@@ -90,7 +90,7 @@ function sendColor(){
 
 If you go to your firebase after pressing the button it should look like this:
 
-<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.30.28%20PM.png" width="35%" height="35%"> <br/>
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.30.28%20PM.png" width="50%" height="50%"> <br/>
 
 
 ### adding a color wheel
@@ -134,7 +134,7 @@ function hexToRgb(hex) {
 ```
 I used the hex to rgb conversion function found [here](https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb). Note that I changed the data format to a single variable and took out the curly brackets because the hexToRgb() function already formats the data appropriately. You can confirm this by looking at the the printed variable in your javascript console.
 
-<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.33.55%20PM.png" width="35%" height="35%"> <br/>
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.33.55%20PM.png" width="50%" height="50%"> <br/>
 
 ## Setting the particle
 
@@ -154,9 +154,8 @@ This is a get request because we are retrieving data from the database and sendi
 }
 ```
 The url of the database can be found here
-<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%204.02.33%20PM.png" width="35%" height="35%"> <br/>
-
-<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.58.27%20PM.png" width="35%" height="35%"> <br/>
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%204.02.33%20PM.png" width="50%" height="50%"> <br/>
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.58.27%20PM.png" width="50%" height="50%"> <br/>
 
 ### publishing the webhook
 Webhooks can be made manually through particle's web ide, but you can also make them through your terminal, which is handy when you are working with more complex data sets/post requests rather than get.
@@ -165,7 +164,7 @@ You can publish the webhook by running the following command line in your termin
 ```particle webhook create getColor.json```
 
 Your terminal should respond with something of the sort
-<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%2012.05.14%20AM.png" width="35%" height="35%"> <br/>
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%2012.05.14%20AM.png" width="50%" height="50%"> <br/>
 
 
 ### wiring the particle
@@ -175,7 +174,7 @@ here are example codes for each [link](https://github.com/apanin/ParticleKeyeStu
 
 follow the schematic for hookup
 
-<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/hookup.png" width="35%" height="35%"> <br/>
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/hookup.png" width="50%" height="50%"> <br/>
 
 ## coding the particle
 Now that we have the webhook and the particle set up, we can use code.
@@ -191,57 +190,78 @@ paste the following code
 
 // Forward declarations
 void getDataHandler(const char *topic, const char *data);
-
+//name of this particular event
 const char *EVENT_NAME = "getColor";
 // String data = String(10);
 
-
+//defining parameters for the led
+//red pin
 #define rPin D1
+//green pin
 #define gPin D2
+//blue pint
 #define bPin D0
+//push button pin
 #define buttonPin D3
+//values for each led
+//min 255 (no light)
+//max 0 (full brightness)
 int r = 0;
 int g = 0;
 int b = 0;
 
+//setup
 void setup() {
 	Serial.begin(9600);
+	//set each pin as an output
 	pinMode(rPin, OUTPUT);
 	pinMode(gPin, OUTPUT);
 	pinMode(bPin, OUTPUT);
+	//setup the webhook parameters: directory of hook-response, data handler function and devices which can use the webhook
 	Particle.subscribe("hook-response/getColor", getDataHandler, MY_DEVICES);
 }
 
+//loop function
 void loop() {
+    //if the push button is pressed
     if (digitalRead(buttonPin) == LOW){
         Serial.println("button pushed");
+	//make the led white
         analogWrite(gPin, 255);
         analogWrite(rPin, 255);
         analogWrite(bPin, 255);
-		Particle.publish(EVENT_NAME, "", PRIVATE);
-		delay(1000);
+	//get the data front the firebase
+	Particle.publish(EVENT_NAME, "", PRIVATE);
+	delay(1000);
 	}
-	
+	// show the color as defined in the database
       analogWrite(rPin, 255-r);
       analogWrite(gPin, 255-g);
       analogWrite(bPin, 255-b);
       delay(1000);
 }
 
+//data handler function
 void getDataHandler(const char *topic, const char *data) {
 	// This isn't particularly efficient; there are too many copies of the data floating
 	// around here, but the data is not very large and it's not kept around long so it
 	// should be fine.
 	Serial.println("handle");
+	//data buffer
 	StaticJsonBuffer<256> jsonBuffer;
+	//make a copy of the string of data because the data string is a local variable
 	char *mutableCopy = strdup(data);
+	//parse json object as defined by the json library
 	JsonObject& root = jsonBuffer.parseObject(mutableCopy);
+	//allocate memory for the mutable copy
 	free(mutableCopy);
-
+	//print the string of data as is
 	Serial.printlnf("data: %s", data);
+	//define global variables as their respective parameter in the json object
 	r = root["r"];
 	g = root["g"];
 	b = root["b"];
+	//print values
 	Serial.println(r);
 	Serial.println(g);
 	Serial.println(b);
@@ -298,54 +318,65 @@ In this case I used a put request rather than a post because I am logging the pa
 Now that the webhook is setup we will make the particle publish the data to the firebase.
 google maps function locationCallback() lets you use the location data (lat, lng), which we will use to post the data to the server.
 ```
-// This #include statement was automatically added by the Particle IDE.
+//google maps library
 #include <google-maps-device-locator.h>
-
+//json extraction library
 #include <SparkJson.h>
-
+//particle library
 #include "Particle.h"
 
-// Test Program #3 for Firebase Integration
-// Reads data from the database and prints it to the debug serial port
 
-
-// Forward declarations
+// declare data related functions and values
 void getDataHandler(const char *topic, const char *data);
+//get color is our universal get function
 const char *GET = "getColor";
+//postPosition is our universal post function
 const char *POST = "postPosition";
 String deviceName;
 
 GoogleMapsDeviceLocator locator;
-
+//define pins
 #define rPin D1
 #define gPin D2
 #define bPin D0
 #define buttonPin D3
+//values for each led
+//min 255 (no light)
+//max 0 (full brightness)
 int r = 0;
 int g = 0;
 int b = 0;
 
 void setup() {
 	Serial.begin(9600);
+	//set each pin as an output
 	pinMode(rPin, OUTPUT);
 	pinMode(gPin, OUTPUT);
 	pinMode(bPin, OUTPUT);
-	//get location every 2000 seconds
+	//locator setup
+	//get location when triggered and call function locationCallback
 	locator.withLocateOnce().withSubscribe(locationCallback);
 }
 
 void loop() {
-    locator.loop();
+    //keep locator active (will be activated if triggered)
+     locator.loop();
+    //if the push button is pressed
     if (digitalRead(buttonPin) == LOW){
         Serial.println("button pushed");
+	//set led to white
         analogWrite(gPin, 255);
         analogWrite(rPin, 255);
         analogWrite(bPin, 255);
+	//setup the webhook parameters: directory of hook-response, data handler function and devices which can use the webhook
         Particle.subscribe("hook-response/getColor", getDataHandler, MY_DEVICES);
-		Particle.publish(GET, "", PRIVATE);
-		delay(1000);
-		locator.publishLocation();
-		delay(1000);
+	//Get data from firebase
+	Particle.publish(GET, "", PRIVATE);
+	//delay 1 second before posting data	
+	delay(1000);
+	//publish location
+	locator.publishLocation();
+	delay(1000);
 	}
 	
       analogWrite(rPin, 255-r);
@@ -354,43 +385,54 @@ void loop() {
       delay(1000);
 }
 
+//data handler function
 void getDataHandler(const char *topic, const char *data) {
 	// This isn't particularly efficient; there are too many copies of the data floating
 	// around here, but the data is not very large and it's not kept around long so it
 	// should be fine.
 	Serial.println("handle");
+	//data buffer
 	StaticJsonBuffer<256> jsonBuffer;
+	//make a copy of the string of data because the data string is a local variable
 	char *mutableCopy = strdup(data);
+	//parse json object as defined by the json library
 	JsonObject& root = jsonBuffer.parseObject(mutableCopy);
+	//allocate memory for the mutable copy
 	free(mutableCopy);
-
+	//print the string of data as is
 	Serial.printlnf("data: %s", data);
+	//define global variables as their respective parameter in the json object
 	r = root["r"];
 	g = root["g"];
 	b = root["b"];
+	//print values
 	Serial.println(r);
 	Serial.println(g);
 	Serial.println(b);
 }
 
+//function called when
 void locationCallback(float lat, float lon, float accuracy) {
     Serial.println("posting users postion");
     Serial.print('lat: ');
     Serial.println(lat);
     Serial.print('lng: ');
     Serial.println(lon);
+    //setup the proper publish funxtion
     Particle.subscribe("spark/", deviceNameHandler);
     Particle.publish("spark/device/name");
     Serial.println("updating location");
+	// create a json object for each parameter
 	char buf[256];
 	snprintf(buf, sizeof(buf), "{\"lat\":%.6f,\"lng\":%.6f,\"acc\":\"%.6f\"}", lat, lon, accuracy);
 	Serial.printlnf("publishing %s", buf);
+	//publish json object
 	Particle.publish(POST, buf, PRIVATE);
 }
 
 void deviceNameHandler(const char *topic, const char *data) {
 	deviceName = data;
-} 
+}
 ```
 ## Retrieving data from the web
 Now that we have the particle posting data to the server, we will retrieve this data from the browser.
