@@ -154,8 +154,8 @@ This is a get request because we are retrieving data from the database and sendi
 }
 ```
 The url of the database can be found here
-<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%204.02.33%20PM.png" width="50%" height="50%"> <br/>
-<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.58.27%20PM.png" width="50%" height="50%"> <br/>
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%204.02.33%20PM.png" width="80%" height="80%"> <br/>
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%203.58.27%20PM.png" width="80%" height="80%"> <br/>
 
 ### publishing the webhook
 Webhooks can be made manually through particle's web ide, but you can also make them through your terminal, which is handy when you are working with more complex data sets/post requests rather than get.
