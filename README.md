@@ -556,4 +556,4 @@ function hexToRgb(hex) {
 
 ```
 
-And there you have it, a website and a particle connected through firebase. ( Watch the video to see what it looks like)
+And there it is, a website and a particle connected through firebase. ( Watch the video to see what it looks like)
