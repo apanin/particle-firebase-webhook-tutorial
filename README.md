@@ -286,7 +286,7 @@ Add the google maps library to your project. You can then add a google maps loca
 ## creating a put webhook
 Similarly to the get webhook, we will create a put type webhook.
 You can create the following postPosition.json file
-```
+```c
 {
 	"event": "postPosition",
 	"url": "https://particle-example-29829.firebaseio.com/position.json",
@@ -317,7 +317,7 @@ In this case I used a put request rather than a post because I am logging the pa
 ### Adding the put request to your particle code
 Now that the webhook is setup we will make the particle publish the data to the firebase.
 google maps function locationCallback() lets you use the location data (lat, lng), which we will use to post the data to the server.
-```
+```c
 //google maps library
 #include <google-maps-device-locator.h>
 //json extraction library
@@ -440,7 +440,7 @@ Also note that an extra variable is given, which is the time stamp, this says wh
 
 ### Updating html
 I updated the body of the html page started earlier by the following:
-```
+```html
   <body>
 	<h1> Firebase trial page </h1>
         <h2> Send a color </h2>
@@ -454,7 +454,7 @@ I updated the body of the html page started earlier by the following:
 
 ### getting data
 the added button triggers the function getLocation, we will use this to get data and update the pages content consequently.
-```
+```javascript
 function getLocation(){
   console.log("get location");
   ref.on("value", function(snapshot) {
@@ -467,8 +467,13 @@ function getLocation(){
 When written as such, you can see that firebase is sending you a json file. Now since we are targetting location values we can do such like this:
 
 ```
-var ref;
+/*****************
+Firebase/Particle example
+Nina Parenteau
+******************/
 
+var ref;
+//triggered function when the page is fully loaded
 if(window.attachEvent) {
     window.attachEvent('onload', loadFirebase);
 } else {
@@ -484,8 +489,10 @@ if(window.attachEvent) {
     }
 }
 
+//load firebase
 function loadFirebase() {
   console.log("loading Firebase");
+  //json object for configuration note if you are using a personal database, use your specific configuration (api key, domain, etc...)
   var firebaseConfig = {
     apiKey: "AIzaSyCQVp_2mCxTvhDioDd0G8l-MMl1QJGJRro",
     authDomain: "particle-example-29829.firebaseapp.com",
@@ -496,17 +503,24 @@ function loadFirebase() {
     appId: "1:306280375832:web:b3c46ed3040fcb0ee7856d",
     measurementId: "G-YJ40SYWVBP"
   };
- // Initialize Firebase
+ // Initialize Firebase as configured
   firebase.initializeApp(firebaseConfig);
   var database = firebase.database();
   ref = firebase.database().ref();
+  //print firebase to see parameters
   console.log(firebase);
 }
 
+//sends a color to the db which will be read by the particle photon
+//and emitted by the led
 function sendColor(){
+  //define color variable as the value of the color picker 
   var color = document.getElementById("color-picker").value;
+  //convert hex color to rgb value
   color = hexToRgb(color);
   console.log(color);
+  //set reference of the database to color
+  //and set it as the value of color (which has been transformed into an rgb json object)
   firebase.database().ref('color/').set(
   color
 , function(error) {
@@ -518,8 +532,10 @@ function sendColor(){
 });
 }
 
+//retrieves data on the location of the particle and adds values to the html page
 function getPosition(){
   console.log("get position");
+  //sets firebase reference to position and retrieves json object
   var positionRef = firebase.database().ref("position/");
   positionRef.on("value", function(snapshot) {
    console.log(snapshot.val());
@@ -528,16 +544,31 @@ function getPosition(){
    console.log("lat: " + data.lat);
    console.log("lng: " + data.lng);
    console.log("acc: " + data.acc);
-
+   //change values of inner html to the retrieved data
    document.getElementById("particle-location-title").innerHTML = "Particle was last seen";
-   document.getElementById("particle-location").innerHTML += "<p>" + data.ts + "</p> <p> lat: "+ data.lat + "</p> <p> lng: " + data.lng + "</p> <p> +/-: " + data.acc + "</p>";
+   document.getElementById("particle-location").innerHTML = "<p>" + data.ts + "</p> <p> lat: "+ data.lat + "</p> <p> lng: " + data.lng + "</p> <p> +/-: " + data.acc + "</p>";
   }, function (error) {
    console.log("Error: " + error.code);
  });
 }
 
+// //old send color function which has been redefined
+// function sendColor(){
+//   firebase.database().ref('color/').update({
+//   a: 10,
+//   b: 30,
+//   c: 50
+// }, function(error) {
+//   if (error) {
+//     console.error("data was not sent");
+//   } else {
+//     console.log("data sent");
+//   }
+// });
+// }
 
 // function found on stack overflow
+// transforms hex string into color json object
 // src : https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 function hexToRgb(hex) {
   // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
