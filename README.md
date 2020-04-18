@@ -164,7 +164,7 @@ You can publish the webhook by running the following command line in your termin
 ```particle webhook create getColor.json```
 
 Your terminal should respond with something of the sort
-<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%2012.05.14%20AM.png" width="50%" height="50%"> <br/>
+<img src="https://github.com/apanin/particle-firebase-webhook-tutorial/blob/master/images/Screen%20Shot%202020-04-08%20at%2012.05.14%20AM.png" width="80%" height="80%"> <br/>
 
 
 ### wiring the particle
