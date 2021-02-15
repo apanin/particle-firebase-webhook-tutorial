@@ -139,7 +139,7 @@ I used the hex to rgb conversion function found [here](https://stackoverflow.com
 ## Setting the particle
 
 ### making a get webhook
-The first thing you need to do to set up your particle is create a webhook. Write the following json file and save it.
+The first thing you need to do to set up your particle is create a webhook. Write the following json file and save it as getColor.json.
 This is a get request because we are retrieving data from the database and sending it to the particle.
 ```json
 {
